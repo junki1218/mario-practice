@@ -53,10 +53,8 @@ const GAME_START_WORD = "スー";
 const COIN_WORD = "コイン";
 const COIN_DUMMIES = ["1UP", "スー"];
 
-// コインを何回連続で言うか（このランダム幅の中から毎回抽選）
-// 今後の拡張予定（土管・ドッスン等の追加イベント）はここに分岐を足す想定。
-const COIN_ROUNDS_MIN = 3;
-const COIN_ROUNDS_MAX = 8;
+// コインの連続回数は「周回数」と同じ（1周目=1回, 2周目=2回, 3周目=3回…）で、
+// game.js 側の state.lap を使って自動的に決まります。ここに固定値は持ちません。
 
 // コインフェーズが終わって最初の「スー」に戻るときの分岐（ダミーは少しトリッキーに）
 const COIN_EXIT_DUMMIES = ["1UP", "マリオ"];
@@ -94,8 +92,6 @@ if (typeof module !== "undefined" && module.exports) {
     GAME_START_WORD,
     COIN_WORD,
     COIN_DUMMIES,
-    COIN_ROUNDS_MIN,
-    COIN_ROUNDS_MAX,
     COIN_EXIT_DUMMIES,
     TIMING,
     VISUAL_CONFIG,

@@ -41,7 +41,8 @@
     return {
       difficultyKey,
       score: 0,
-      phase: "build", // "build" | "coin"
+      lap: 1,           // 周回数。この数だけコインが連続する（1周目=1回, 2周目=2回…）
+      phase: "build",   // "build" | "coin"
       buildIndex: 0,
       coinRoundsTotal: 0,
       coinRoundsDone: 0,
@@ -56,10 +57,6 @@
   // ================================================================
   // ユーティリティ
   // ================================================================
-  function randInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-
   /**
    * 単語の文字数に応じてマリオ画像の表示サイズ(px)を線形補間で求める。
    * 文字数が多いほど（フレーズが長く育つほど）大きく表示される。
@@ -113,19 +110,24 @@
       round = BUILD_SEQUENCE[state.buildIndex];
       state.buildIndex++;
       if (state.buildIndex >= BUILD_SEQUENCE.length) {
+        // ビルドフェーズ終了（＝スーパーマリオ→コインの回答が済んだ）→ コインフェーズへ。
+        // コインの連続回数は「現在の周回数」と同じ（1周目=1回, 2周目=2回, 3周目=3回…）。
         state.phase = "coin";
-        state.coinRoundsTotal = randInt(COIN_ROUNDS_MIN, COIN_ROUNDS_MAX);
+        state.coinRoundsTotal = state.lap;
         state.coinRoundsDone = 0;
       }
     } else {
-      // コインフェーズ：仕様上「コイン」としか表示せず、何枚目かは出さない
+      // コインフェーズ：仕様上「コイン」としか表示せず、何枚目かは出さない。
+      // prev="コイン" のラウンドを、この周の回数(state.coinRoundsTotal)ぶん繰り返す。
       state.coinRoundsDone++;
       if (state.coinRoundsDone >= state.coinRoundsTotal) {
-        // コインフェーズ終了 → 最初の「ス」に戻る
+        // この周のコインを言い切った → 最初の「スー」に戻り、次の周へ（コインが1回増える）
         round = { prev: COIN_WORD, correct: GAME_START_WORD, dummies: COIN_EXIT_DUMMIES };
         state.phase = "build";
         state.buildIndex = 0;
+        state.lap++;
       } else {
+        // まだコインが続く → 次もコイン
         round = { prev: COIN_WORD, correct: COIN_WORD, dummies: COIN_DUMMIES };
       }
     }
