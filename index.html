@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<title>スーパーマリオゲーム練習アプリ</title>
+<meta name="description" content="飲み会ゲーム「スーパーマリオゲーム」を一人で練習するためのWebアプリ" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<div class="bg-layer" aria-hidden="true"></div>
+<div class="app">
+
+  <!-- ============================================================
+       タイトル画面（難易度選択）
+       ============================================================ -->
+  <section id="screen-title" class="screen is-active">
+    <h1 class="title-heading">スーパーマリオ<br />ゲーム練習</h1>
+    <p class="title-sub">前の人の言葉だけを見て、次を当てよう</p>
+
+    <hr class="divider" />
+
+    <div class="difficulty-list">
+      <button type="button" class="difficulty-btn" data-difficulty="easy">Easy（5秒）</button>
+      <button type="button" class="difficulty-btn" data-difficulty="normal">Normal（3秒）</button>
+      <button type="button" class="difficulty-btn" data-difficulty="hard">Hard（2秒）</button>
+      <button type="button" class="difficulty-btn" data-difficulty="veryhard">Very Hard（1秒）</button>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ゲーム画面
+       ============================================================ -->
+  <section id="screen-game" class="screen">
+    <div class="prev-block">
+      <p class="prev-label">前の人</p>
+      <div class="prev-visual" id="prev-visual">
+        <img id="prev-image" class="prev-image" src="assets/mario.png" alt="マリオ" />
+        <span id="prev-emoji" class="prev-emoji is-hidden" aria-hidden="true">🪙</span>
+      </div>
+      <p class="prev-word" id="prev-word">スー</p>
+    </div>
+
+    <hr class="divider" />
+
+    <div class="question-block">
+      <p class="question-label">あなたは？</p>
+    </div>
+
+    <div id="choices"><!-- 選択肢ボタンは game.js が動的に生成 --></div>
+
+    <div class="footer-block">
+      <hr class="divider divider--thin" />
+      <div class="score-row">スコア：<span id="score">0</span></div>
+      <p class="timer-label">残り時間</p>
+      <div class="timer-bar-track">
+        <div class="timer-bar-fill" id="timer-bar-fill"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       リザルト画面
+       ============================================================ -->
+  <section id="screen-result" class="screen">
+    <p class="result-icon" id="result-icon">×</p>
+    <p class="result-message" id="result-message">ゲームオーバー</p>
+    <p class="result-score">スコア：<strong id="result-score">0</strong></p>
+
+    <div class="result-actions">
+      <button type="button" class="difficulty-btn" id="btn-retry">もう一度</button>
+      <button type="button" class="difficulty-btn" id="btn-to-title">タイトルへ戻る</button>
+    </div>
+  </section>
+
+  <!-- 正解○ / 不正解× の全画面エフェクト -->
+  <div class="effect-overlay" id="effect-overlay"></div>
+
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/sound.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>

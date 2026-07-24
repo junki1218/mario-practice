@@ -1,0 +1,375 @@
+/* ==================================================================
+   style.css
+   ------------------------------------------------------------------
+   スーパーマリオゲーム練習アプリ スタイル定義
+   仕様書2章・9章に準拠：
+     - シンプルな画面構成 / 文字を大きく / 明朝体
+     - スマートフォン縦画面基準
+     - 背景画像は後から差し替え可能な構造
+     - ボタンは大きく押しやすい配置
+   ================================================================== */
+
+:root {
+  /* ----------------------------------------------------------------
+     背景画像の差し替えポイント。
+     url('../assets/bg.jpg') のように1行差し替えるだけで
+     ゲーム画面の背景を変更できます（仕様書9章）。
+     --bg-opacity を変えると背景の薄さ（濃さ）を調整できます。
+     ---------------------------------------------------------------- */
+  --bg-image: url('../assets/bg.png');
+  --bg-opacity: 0.16;
+  --bg-color: #faf6ef;
+
+  --color-text: #2b2622;
+  --color-accent: #c0392b;
+  --color-correct: #2e8b3d;
+  --color-wrong: #c0392b;
+  --color-button-bg: #ffffff;
+  --color-button-border: #2b2622;
+
+  --font-mincho: "Noto Serif JP", "Yu Mincho", "YuMincho", "Hiragino Mincho ProN",
+    "MS PMincho", serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-mincho);
+  color: var(--color-text);
+  background-color: var(--bg-color);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ------------------------------------------------------------------
+   背景画像レイヤー
+   薄く（低い不透明度で）表示することで、前面のテキストやボタンの
+   視認性を保ったまま雰囲気だけ背景に出す（仕様書9章）。
+   ------------------------------------------------------------------ */
+.bg-layer {
+  position: fixed;
+  inset: 0;
+  background-image: var(--bg-image);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: var(--bg-opacity);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.app {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+}
+
+/* ------------------------------------------------------------------
+   画面切り替え（タイトル / ゲーム / リザルト）
+   ------------------------------------------------------------------ */
+.screen {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  padding: 24px 20px;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.screen.is-active {
+  display: flex;
+}
+
+/* ------------------------------------------------------------------
+   タイトル画面
+   ------------------------------------------------------------------ */
+#screen-title {
+  justify-content: center;
+  align-items: stretch;
+  gap: 20px;
+  text-align: center;
+}
+
+.title-heading {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 4px;
+  letter-spacing: 0.05em;
+}
+
+.title-sub {
+  font-size: 1rem;
+  color: #6b6259;
+  margin: 0 0 24px;
+}
+
+.difficulty-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ------------------------------------------------------------------
+   共通：区切り線（仕様書モックアップの「────」を再現）
+   ------------------------------------------------------------------ */
+.divider {
+  border: none;
+  border-top: 2px solid var(--color-text);
+  margin: 16px 0;
+  opacity: 0.75;
+}
+
+.divider--thin {
+  border-top-width: 1px;
+  opacity: 0.4;
+}
+
+/* ------------------------------------------------------------------
+   ゲーム画面
+   ------------------------------------------------------------------ */
+#screen-game {
+  justify-content: flex-start;
+  gap: 0;
+}
+
+.prev-block {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.prev-label {
+  font-size: 1rem;
+  color: #6b6259;
+  margin: 0 0 8px;
+}
+
+.prev-word {
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin: 0;
+  word-break: keep-all;
+}
+
+/* ------------------------------------------------------------------
+   前の人の単語に連動して拡大縮小するマリオ画像 / コイン絵文字
+   ------------------------------------------------------------------ */
+.prev-visual {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  min-height: 90px;
+  margin-bottom: 6px;
+}
+
+.prev-image {
+  width: 90px;
+  height: auto;
+  transition: width 0.25s ease;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.25));
+}
+
+.prev-emoji {
+  font-size: 90px;
+  line-height: 1;
+  transition: font-size 0.25s ease;
+}
+
+.is-hidden {
+  display: none !important;
+}
+
+.question-block {
+  text-align: center;
+  padding: 8px 0 16px;
+}
+
+.question-label {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+#choices {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.choice-btn {
+  width: 100%;
+  font-family: var(--font-mincho);
+  font-size: 1.6rem;
+  font-weight: 700;
+  padding: 18px 12px;
+  min-height: 64px;
+  border-radius: 16px;
+  border: 2px solid var(--color-button-border);
+  background-color: var(--color-button-bg);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: transform 0.08s ease, background-color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.choice-btn:active {
+  transform: scale(0.96);
+  background-color: #f0ebe1;
+}
+
+.difficulty-btn {
+  width: 100%;
+  font-family: var(--font-mincho);
+  font-size: 1.3rem;
+  font-weight: 700;
+  padding: 18px 12px;
+  min-height: 60px;
+  border-radius: 16px;
+  border: 2px solid var(--color-button-border);
+  background-color: var(--color-button-bg);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: transform 0.08s ease, background-color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.difficulty-btn:active {
+  transform: scale(0.97);
+  background-color: #f0ebe1;
+}
+
+.footer-block {
+  margin-top: auto;
+  padding-top: 20px;
+}
+
+.score-row {
+  display: flex;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.timer-label {
+  font-size: 0.95rem;
+  color: #6b6259;
+  margin: 0 0 6px;
+  text-align: center;
+}
+
+.timer-bar-track {
+  width: 100%;
+  height: 18px;
+  border-radius: 9px;
+  border: 2px solid var(--color-button-border);
+  background-color: #ffffff;
+  overflow: hidden;
+}
+
+.timer-bar-fill {
+  height: 100%;
+  width: 100%;
+  background-color: var(--color-accent);
+}
+
+/* ------------------------------------------------------------------
+   正解 / 不正解 エフェクト（画面中央に大きく○×を一瞬表示）
+   ------------------------------------------------------------------ */
+.effect-overlay {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 40vw;
+  font-weight: 900;
+  pointer-events: none;
+  z-index: 20;
+  text-shadow: 0 0 24px rgba(255, 255, 255, 0.9);
+}
+
+.effect-overlay.is-visible {
+  display: flex;
+}
+
+.effect-overlay.effect-correct {
+  color: var(--color-correct);
+}
+
+.effect-overlay.effect-wrong {
+  color: var(--color-wrong);
+}
+
+/* ------------------------------------------------------------------
+   リザルト画面
+   ------------------------------------------------------------------ */
+#screen-result {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+}
+
+.result-icon {
+  font-size: 6rem;
+  font-weight: 900;
+  color: var(--color-wrong);
+  margin: 0;
+  line-height: 1;
+}
+
+.result-message {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.result-score {
+  font-size: 1.1rem;
+  margin: 0 0 28px;
+}
+
+.result-score strong {
+  font-size: 1.6rem;
+}
+
+.result-actions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ------------------------------------------------------------------
+   レスポンシブ（仕様書11章：スマホ〜PCまで幅広く対応）
+   ------------------------------------------------------------------ */
+@media (min-width: 600px) {
+  .prev-word {
+    font-size: 2.8rem;
+  }
+  .choice-btn {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 340px) {
+  .prev-word {
+    font-size: 2rem;
+  }
+  .choice-btn {
+    font-size: 1.35rem;
+  }
+}
